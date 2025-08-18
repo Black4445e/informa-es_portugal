@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>🚒 Fogos em Portugal</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #111;
+      color: #fff;
+    }
+    #topbar {
+      background: #b30000;
+      color: #fff;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      text-transform: uppercase;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    #contador {
+      font-size: 1.2rem;
+      background: #222;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+    }
+    #controles {
+      padding: 1rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      background: #222;
+    }
+    select {
+      padding: 0.5rem;
+      border-radius: 4px;
+      border: none;
+      background: #333;
+      color: #fff;
+    }
+    #ultimaAtualizacao {
+      font-size: 0.9rem;
+      margin-left: auto;
+      color: #aaa;
+    }
+    #listaFogos {
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1rem;
+    }
+    .fogo {
+      background: #1a1a1a;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+      cursor: pointer;
+      transition: transform 0.2s, border 0.2s;
+      border-left: 6px solid #555;
+    }
+    .fogo:hover { transform: scale(1.03); }
+    .fogo h3 { margin: 0 0 0.5rem 0; color: #ffcccc; }
+    .fogo p { margin: 0.2rem 0; }
+    .fogo.critico { border-left: 6px solid orange; }
+    .fogo.extremo { border-left: 6px solid red; background: #330000; }
+
+    .alerta, .alerta-forte {
+      font-weight: bold;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    .alerta { background: orange; color: #000; }
+    .alerta-forte {
+      background: red;
+      color: #fff;
+      animation: piscar 1s infinite;
+    }
+    @keyframes piscar {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0.3; }
+    }
+
+    /* Overlay tela cheia */
+    #detalhes {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.97);
+      color: #fff;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 2rem;
+      box-sizing: border-box;
+      overflow-y: auto;
+      z-index: 1000;
+    }
+    #detalhes h2 { margin-top: 0; color: #ff4d4d; }
+    #detalhes table {
+      width: 100%;
+      max-width: 800px;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background: #222;
+    }
+    #detalhes th, #detalhes td {
+      border: 1px solid #444;
+      padding: 0.6rem;
+      text-align: left;
+    }
+    #fechar {
+      background: #b30000;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    #fechar:hover { background: #ff1a1a; }
+    #alerta-detalhes, #alerta-forte-detalhes {
+      padding: 1rem;
+      margin-top: 1rem;
+      border-radius: 6px;
+      font-weight: bold;
+      text-align: center;
+      font-size: 1.1rem;
+      max-width: 800px;
+    }
+    #alerta-detalhes { background: orange; color: #000; display: none; }
+    #alerta-forte-detalhes {
+      background: red; color: #fff;
+      display: none;
+      animation: piscar 1s infinite;
+      font-size: 1.3rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="topbar">
+    <h2>🚒 Bombeiros - Fogos Ativos</h2>
+    <div id="contador">Ativos: 0</div>
+  </div>
+
+  <div id="controles">
+    <label for="filtroDistrito">Distrito:</label>
+    <select id="filtroDistrito">
+      <option value="todos">Todos</option>
+    </select>
+
+    <label for="ordenar">Ordenar por:</label>
+    <select id="ordenar">
+      <option value="man">Operacionais</option>
+      <option value="date">Data/Hora</option>
+      <option value="district">Distrito</option>
+    </select>
+
+    <div id="ultimaAtualizacao">Última atualização: --:--</div>
+  </div>
+
+  <div id="listaFogos"></div>
+
+  <!-- Overlay em tela cheia -->
+  <div id="detalhes">
+    <button id="fechar">Fechar</button>
+    <h2>Detalhes da ocorrência 🚨</h2>
+    <div id="alerta-detalhes">⚠️ Incêndio de grandes dimensões! Não se aproximar!</div>
+    <div id="alerta-forte-detalhes">🚨 PERIGO EXTREMO! Mais de 1000 operacionais! AFASTE-SE 🚒🔥</div>
+    <table>
+      <tbody id="detalhes-body"></tbody>
+    </table>
+  </div>
+
+  <script>
+    let fogos = [];
+
+    async function loadFogos() {
+      try {
+        const res = await fetch('https://api.fogos.pt/v2/incidents/active?geojson=true');
+        const data = await res.json();
+
+        fogos = data.features
+          .map(f => f.properties)
+          .filter(p => p.status !== "Conclusão" && p.status !== "Vigilância");
+
+        renderFogos();
+        preencherDistritos();
+
+        document.getElementById("contador").textContent = `Ativos: ${fogos.length}`;
+        const agora = new Date();
+        document.getElementById("ultimaAtualizacao").textContent =
+          "Última atualização: " + agora.toLocaleTimeString();
+
+      } catch (err) {
+        console.error("Erro ao buscar dados:", err);
+      }
+    }
+
+    function preencherDistritos() {
+      const filtro = document.getElementById("filtroDistrito");
+      const distritos = [...new Set(fogos.map(f => f.district))].sort();
+      filtro.innerHTML = '<option value="todos">Todos</option>';
+      distritos.forEach(d => {
+        const opt = document.createElement("option");
+        opt.value = d;
+        opt.textContent = d;
+        filtro.appendChild(opt);
+      });
+    }
+
+    function renderFogos() {
+      const lista = document.getElementById("listaFogos");
+      lista.innerHTML = "";
+
+      let filtrados = [...fogos];
+      const distrito = document.getElementById("filtroDistrito").value;
+      if (distrito !== "todos") {
+        filtrados = filtrados.filter(f => f.district === distrito);
+      }
+
+      const ordenar = document.getElementById("ordenar").value;
+      filtrados.sort((a, b) => {
+        if (ordenar === "man") return b.man - a.man;
+        if (ordenar === "district") return a.district.localeCompare(b.district);
+        if (ordenar === "date") return (b.dateTime?.sec || 0) - (a.dateTime?.sec || 0);
+        return 0;
+      });
+
+      filtrados.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "fogo";
+
+        if (p.man > 1000) {
+          div.classList.add("extremo");
+        } else if (p.man > 100) {
+          div.classList.add("critico");
+        }
+
+        div.innerHTML = `
+          <h3>${p.location}</h3>
+          <p>📍 <strong>Status:</strong> ${p.status}</p>
+          <p>🧑‍🚒 <strong>Operacionais:</strong> ${p.man}</p>
+          <p>🚒 <strong>Veículos:</strong> ${p.terrain}</p>
+          <p>🚁 <strong>Aéreos:</strong> ${p.aerial}</p>
+          ${p.man > 1000 
+            ? '<div class="alerta-forte">🚨 PERIGO EXTREMO! Não se aproximar 🚨</div>' 
+            : p.man > 100 
+              ? '<div class="alerta">⚠️ Alerta: Não se aproximar</div>' 
+              : ''}
+        `;
+
+        div.addEventListener("click", () => {
+          document.getElementById("detalhes").style.display = "flex";
+          const tbody = document.getElementById("detalhes-body");
+          tbody.innerHTML = `
+            <tr><th>ID</th><td>${p.id}</td></tr>
+            <tr><th>Status</th><td>${p.status}</td></tr>
+            <tr><th>Data</th><td>${p.date} ${p.hour}</td></tr>
+            <tr><th>Local</th><td>${p.location}</td></tr>
+            <tr><th>Natureza</th><td>${p.natureza}</td></tr>
+            <tr><th>Distrito</th><td>${p.district}</td></tr>
+            <tr><th>Concelho</th><td>${p.concelho}</td></tr>
+            <tr><th>Freguesia</th><td>${p.freguesia}</td></tr>
+            <tr><th>Operacionais</th><td>${p.man}</td></tr>
+            <tr><th>Veículos</th><td>${p.terrain}</td></tr>
+            <tr><th>Aéreos</th><td>${p.aerial}</td></tr>
+          `;
+
+          document.getElementById("alerta-detalhes").style.display = (p.man > 100 && p.man <= 1000) ? "block" : "none";
+          document.getElementById("alerta-forte-detalhes").style.display = (p.man > 1000) ? "block" : "none";
+        });
+
+        lista.appendChild(div);
+      });
+    }
+
+    document.getElementById("fechar").addEventListener("click", () => {
+      document.getElementById("detalhes").style.display = "none";
+    });
+
+    document.getElementById("filtroDistrito").addEventListener("change", renderFogos);
+    document.getElementById("ordenar").addEventListener("change", renderFogos);
+
+    loadFogos();
+    setInterval(loadFogos, 60 * 1000);
+  </script>
+</body>
+</html>
