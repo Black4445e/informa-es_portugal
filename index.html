@@ -3,259 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Leandra 💖</title>
+<title>A Pessoa Mais Linda do Mundo 💖</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap');
-
-  body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    overflow-x: hidden;
-  }
-
-  /* Tela inicial */
-  #inicio {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    color: #ffb6c1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    z-index: 999;
-    transition: opacity 1s ease;
-    padding: 20px;
-  }
-
-  #inicio h1 {
-    font-size: 2em;
-    margin-bottom: 20px;
-  }
-
-  .botoes {
-    display: flex;
-    gap: 20px;
-    margin-top: 20px;
-  }
-
-  .botoes button {
-    padding: 12px 25px;
-    font-size: 1em;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-
-  #btnNao {
-    background: #ff69b4;
-    color: #fff;
-  }
-
-  #btnNao:hover {
-    background: #ff85c1;
-  }
-
-  #btnSim {
-    background: #fff;
-    color: #ff69b4;
-    position: relative;
-  }
-
-  /* Conteúdo romântico */
-  #conteudo {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 1s ease;
-    background: linear-gradient(135deg, #ffb6c1, #ff69b4);
-    min-height: 100vh;
-    color: #fff;
-  }
-
-  header {
-    text-align: center;
-    padding: 80px 20px 20px;
-  }
-
-  .leandra {
-    font-family: 'Great Vibes', cursive;
-    font-size: 4.5em;
-    background: linear-gradient(45deg, #fff, #ffe4ec, #ffb6c1);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 0 20px rgba(255,255,255,0.6);
-    animation: glow 3s ease-in-out infinite alternate;
-  }
-
-  header p {
-    font-size: 1.4em;
-    margin-top: 20px;
-    animation: fadeIn 3s ease-in-out;
-  }
-
-  .letters {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    padding: 40px 20px;
-  }
-
-  .letter {
-    background: rgba(255,255,255,0.95);
-    color: #ff69b4;
-    border-radius: 20px;
-    width: 280px;
-    padding: 25px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    text-align: center;
-    cursor: pointer;
-    transform: rotate(-1deg);
-    transition: all 0.3s ease;
-    position: relative;
-  }
-
-  .letter:hover {
-    transform: rotate(0deg) scale(1.05);
-    box-shadow: 0 10px 25px rgba(255,182,193,0.6);
-  }
-
-  .letter h2 {
-    font-family: 'Great Vibes', cursive;
-    font-size: 2em;
-    margin-bottom: 10px;
-  }
-
-  .heart {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: #fff;
-    clip-path: polygon(50% 0%, 61% 11%, 75% 0%, 100% 35%, 50% 100%, 0% 35%, 25% 0%, 39% 11%);
-    opacity: 0.7;
-    animation: float 6s infinite;
-  }
-
-  footer {
-    text-align: center;
-    padding: 20px;
-    font-size: 0.9em;
-    opacity: 0.8;
-  }
-
-  /* Animações */
-  @keyframes float {
-    0% {transform: translateY(0) scale(0.8);}
-    50% {transform: translateY(-300px) scale(1.2);}
-    100% {transform: translateY(0) scale(0.8);}
-  }
-
-  @keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity: 1;}
-  }
-
-  @keyframes glow {
-    0% {text-shadow: 0 0 15px #fff, 0 0 25px #ffb6c1;}
-    100% {text-shadow: 0 0 25px #ffe4ec, 0 0 40px #ff69b4;}
-  }
+    body {
+        background: linear-gradient(to bottom, #ff9a9e, #fad0c4);
+        text-align: center;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        color: #fff;
+    }
+    h1 {
+        font-size: 2.5em;
+        margin-top: 20px;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+    #imagem, #video, #foto {
+        border: 5px solid #fff;
+        border-radius: 20px;
+        margin: 20px auto;
+        max-width: 90%;
+        transition: opacity 1s ease-in-out;
+    }
+    #resultado {
+        font-size: 1.8em;
+        margin-top: 20px;
+        font-weight: bold;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+        animation: brilho 2s infinite alternate;
+    }
+    @keyframes brilho {
+        from { text-shadow: 0 0 10px #fff; }
+        to { text-shadow: 0 0 25px #ff3b2e; }
+    }
 </style>
 </head>
 <body>
 
-<!-- TELA INICIAL -->
-<div id="inicio">
-  <h1>Leandra... precisamos conversar 😢</h1>
-  <p style="max-width:320px;">Eu pensei muito e... acho que quero terminar.<br>
-  O que você acha?</p>
+<h1>👑 Descubra a Pessoa Mais Linda do Mundo! 👑</h1>
 
-  <div class="botoes">
-    <button id="btnSim">Sim, quero terminar</button>
-    <button id="btnNao">Não quero 💖</button>
-  </div>
-</div>
-
-<!-- CONTEÚDO ROMÂNTICO -->
-<div id="conteudo">
-  <header>
-    <div class="leandra">Leandra 💖</div>
-    <p>Na verdade... o que eu quero é<br><strong>ficar para sempre com você!</strong><br>
-    Feliz 2 Meses de Namoro Virtual – 22 de Setembro</p>
-  </header>
-
-  <section class="letters">
-    <div class="letter">
-      <h2>💌 Minha Carta</h2>
-      <p>
-        Leandra, cada dia ao seu lado é uma nova razão para sorrir.  
-        Nosso amor, mesmo à distância, é lindo e único.  
-        Obrigado por fazer meus dias mais felizes. 💖
-      </p>
-    </div>
-
-    <div class="letter">
-      <h2>🌸 Nosso Futuro</h2>
-      <p>
-        Sonho com o dia em que nossos abraços não serão apenas palavras.  
-        Até lá, cada mensagem é um pedacinho de nós dois. 💕
-      </p>
-    </div>
-
-    <div class="letter">
-      <h2>✨ Promessa</h2>
-      <p>
-        Prometo continuar te amando, cuidando e esperando,  
-        porque você é meu melhor presente. 💞
-      </p>
-    </div>
-  </section>
-
-  <footer>
-    Feito com todo meu amor para você, Leandra 🌷
-  </footer>
-</div>
+<!-- Foto inicial (uma pessoa aleatória) -->
+<img id="imagem" src="https://randomuser.me/api/portraits/women/44.jpg" width="300" height="230" alt="Outra pessoa">
+<video id="video" width="300" height="230" autoplay style="display:none;"></video>
+<canvas id="canvas" width="300" height="230" style="display:none;"></canvas>
+<img id="foto" width="300" height="230" style="display:none;" alt="Sua Foto">
+<div id="resultado">💖 VOCÊ é a PESSOA MAIS LINDA DO MUNDO!!! 💖</div>
 
 <script>
-  const btnNao = document.getElementById('btnNao');
-  const btnSim = document.getElementById('btnSim');
-  const inicio = document.getElementById('inicio');
-  const conteudo = document.getElementById('conteudo');
+    const imagem = document.getElementById('imagem');
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const foto = document.getElementById('foto');
+    const resultado = document.getElementById('resultado');
 
-  // Se clicar em "Não quero" → mostra surpresa
-  btnNao.addEventListener('click', () => {
-    inicio.style.opacity = '0';
-    setTimeout(()=>{
-      inicio.style.display = 'none';
-      conteudo.style.opacity = '1';
-      conteudo.style.pointerEvents = 'auto';
+    // Primeiro mostra a foto aleatória por 3 segundos
+    setTimeout(() => {
+        // Pede acesso à câmera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+                video.style.display = "block";
+                imagem.style.display = "none";
 
-      // corações flutuantes
-      for (let i = 0; i < 35; i++) {
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.animationDuration = 4 + Math.random() * 4 + 's';
-        heart.style.opacity = Math.random();
-        document.body.appendChild(heart);
-      }
-    }, 800);
-  });
+                // Depois de 3 segundos, tira a foto e mostra
+                setTimeout(() => {
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    foto.src = canvas.toDataURL('image/png');
+                    foto.style.display = "block";
+                    video.style.display = "none";
+                    resultado.style.opacity = 1;
 
-  // Botão "Sim" foge
-  btnSim.addEventListener('mouseenter', () => {
-    const maxX = window.innerWidth - btnSim.offsetWidth - 30;
-    const maxY = window.innerHeight - btnSim.offsetHeight - 30;
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
-    btnSim.style.position = 'absolute';
-    btnSim.style.left = x + 'px';
-    btnSim.style.top = y + 'px';
-  });
+                    // Para a câmera depois da foto
+                    stream.getTracks().forEach(track => track.stop());
+                }, 3000);
+            })
+            .catch(err => {
+                alert("❌ Não foi possível acessar a câmera.");
+                console.error(err);
+            });
+    }, 3000);
 </script>
 
 </body>
