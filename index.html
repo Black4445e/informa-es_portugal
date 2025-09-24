@@ -1,298 +1,262 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>🚒 Fogos em Portugal</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #111;
-      color: #fff;
-    }
-    #topbar {
-      background: #b30000;
-      color: #fff;
-      padding: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: bold;
-      text-transform: uppercase;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-    }
-    #contador {
-      font-size: 1.2rem;
-      background: #222;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-    }
-    #controles {
-      padding: 1rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      flex-wrap: wrap;
-      background: #222;
-    }
-    select {
-      padding: 0.5rem;
-      border-radius: 4px;
-      border: none;
-      background: #333;
-      color: #fff;
-    }
-    #ultimaAtualizacao {
-      font-size: 0.9rem;
-      margin-left: auto;
-      color: #aaa;
-    }
-    #listaFogos {
-      padding: 1rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1rem;
-    }
-    .fogo {
-      background: #1a1a1a;
-      border-radius: 8px;
-      padding: 1rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-      cursor: pointer;
-      transition: transform 0.2s, border 0.2s;
-      border-left: 6px solid #555;
-    }
-    .fogo:hover { transform: scale(1.03); }
-    .fogo h3 { margin: 0 0 0.5rem 0; color: #ffcccc; }
-    .fogo p { margin: 0.2rem 0; }
-    .fogo.critico { border-left: 6px solid orange; }
-    .fogo.extremo { border-left: 6px solid red; background: #330000; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leandra 💖</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap');
 
-    .alerta, .alerta-forte {
-      font-weight: bold;
-      padding: 0.5rem;
-      margin-top: 0.5rem;
-      border-radius: 4px;
-      display: inline-block;
-    }
-    .alerta { background: orange; color: #000; }
-    .alerta-forte {
-      background: red;
-      color: #fff;
-      animation: piscar 1s infinite;
-    }
-    @keyframes piscar {
-      0%, 50%, 100% { opacity: 1; }
-      25%, 75% { opacity: 0.3; }
-    }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+  }
 
-    /* Overlay tela cheia */
-    #detalhes {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.97);
-      color: #fff;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 2rem;
-      box-sizing: border-box;
-      overflow-y: auto;
-      z-index: 1000;
-    }
-    #detalhes h2 { margin-top: 0; color: #ff4d4d; }
-    #detalhes table {
-      width: 100%;
-      max-width: 800px;
-      border-collapse: collapse;
-      margin-top: 1rem;
-      background: #222;
-    }
-    #detalhes th, #detalhes td {
-      border: 1px solid #444;
-      padding: 0.6rem;
-      text-align: left;
-    }
-    #fechar {
-      background: #b30000;
-      color: #fff;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-bottom: 1rem;
-      border-radius: 6px;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-    #fechar:hover { background: #ff1a1a; }
-    #alerta-detalhes, #alerta-forte-detalhes {
-      padding: 1rem;
-      margin-top: 1rem;
-      border-radius: 6px;
-      font-weight: bold;
-      text-align: center;
-      font-size: 1.1rem;
-      max-width: 800px;
-    }
-    #alerta-detalhes { background: orange; color: #000; display: none; }
-    #alerta-forte-detalhes {
-      background: red; color: #fff;
-      display: none;
-      animation: piscar 1s infinite;
-      font-size: 1.3rem;
-    }
-  </style>
+  /* Tela inicial */
+  #inicio {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    color: #ffb6c1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 999;
+    transition: opacity 1s ease;
+    padding: 20px;
+  }
+
+  #inicio h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+
+  .botoes {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .botoes button {
+    padding: 12px 25px;
+    font-size: 1em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  #btnNao {
+    background: #ff69b4;
+    color: #fff;
+  }
+
+  #btnNao:hover {
+    background: #ff85c1;
+  }
+
+  #btnSim {
+    background: #fff;
+    color: #ff69b4;
+    position: relative;
+  }
+
+  /* Conteúdo romântico */
+  #conteudo {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+    background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+    min-height: 100vh;
+    color: #fff;
+  }
+
+  header {
+    text-align: center;
+    padding: 80px 20px 20px;
+  }
+
+  .leandra {
+    font-family: 'Great Vibes', cursive;
+    font-size: 4.5em;
+    background: linear-gradient(45deg, #fff, #ffe4ec, #ffb6c1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 20px rgba(255,255,255,0.6);
+    animation: glow 3s ease-in-out infinite alternate;
+  }
+
+  header p {
+    font-size: 1.4em;
+    margin-top: 20px;
+    animation: fadeIn 3s ease-in-out;
+  }
+
+  .letters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px 20px;
+  }
+
+  .letter {
+    background: rgba(255,255,255,0.95);
+    color: #ff69b4;
+    border-radius: 20px;
+    width: 280px;
+    padding: 25px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    text-align: center;
+    cursor: pointer;
+    transform: rotate(-1deg);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .letter:hover {
+    transform: rotate(0deg) scale(1.05);
+    box-shadow: 0 10px 25px rgba(255,182,193,0.6);
+  }
+
+  .letter h2 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+
+  .heart {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    clip-path: polygon(50% 0%, 61% 11%, 75% 0%, 100% 35%, 50% 100%, 0% 35%, 25% 0%, 39% 11%);
+    opacity: 0.7;
+    animation: float 6s infinite;
+  }
+
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.9em;
+    opacity: 0.8;
+  }
+
+  /* Animações */
+  @keyframes float {
+    0% {transform: translateY(0) scale(0.8);}
+    50% {transform: translateY(-300px) scale(1.2);}
+    100% {transform: translateY(0) scale(0.8);}
+  }
+
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+
+  @keyframes glow {
+    0% {text-shadow: 0 0 15px #fff, 0 0 25px #ffb6c1;}
+    100% {text-shadow: 0 0 25px #ffe4ec, 0 0 40px #ff69b4;}
+  }
+</style>
 </head>
 <body>
-  <div id="topbar">
-    <h2>🚒 Bombeiros - Fogos Ativos</h2>
-    <div id="contador">Ativos: 0</div>
+
+<!-- TELA INICIAL -->
+<div id="inicio">
+  <h1>Leandra... precisamos conversar 😢</h1>
+  <p style="max-width:320px;">Eu pensei muito e... acho que quero terminar.<br>
+  O que você acha?</p>
+
+  <div class="botoes">
+    <button id="btnSim">Sim, quero terminar</button>
+    <button id="btnNao">Não quero 💖</button>
   </div>
+</div>
 
-  <div id="controles">
-    <label for="filtroDistrito">Distrito:</label>
-    <select id="filtroDistrito">
-      <option value="todos">Todos</option>
-    </select>
+<!-- CONTEÚDO ROMÂNTICO -->
+<div id="conteudo">
+  <header>
+    <div class="leandra">Leandra 💖</div>
+    <p>Na verdade... o que eu quero é<br><strong>ficar para sempre com você!</strong><br>
+    Feliz 2 Meses de Namoro Virtual – 22 de Setembro</p>
+  </header>
 
-    <label for="ordenar">Ordenar por:</label>
-    <select id="ordenar">
-      <option value="man">Operacionais</option>
-      <option value="date">Data/Hora</option>
-      <option value="district">Distrito</option>
-    </select>
+  <section class="letters">
+    <div class="letter">
+      <h2>💌 Minha Carta</h2>
+      <p>
+        Leandra, cada dia ao seu lado é uma nova razão para sorrir.  
+        Nosso amor, mesmo à distância, é lindo e único.  
+        Obrigado por fazer meus dias mais felizes. 💖
+      </p>
+    </div>
 
-    <div id="ultimaAtualizacao">Última atualização: --:--</div>
-  </div>
+    <div class="letter">
+      <h2>🌸 Nosso Futuro</h2>
+      <p>
+        Sonho com o dia em que nossos abraços não serão apenas palavras.  
+        Até lá, cada mensagem é um pedacinho de nós dois. 💕
+      </p>
+    </div>
 
-  <div id="listaFogos"></div>
+    <div class="letter">
+      <h2>✨ Promessa</h2>
+      <p>
+        Prometo continuar te amando, cuidando e esperando,  
+        porque você é meu melhor presente. 💞
+      </p>
+    </div>
+  </section>
 
-  <!-- Overlay em tela cheia -->
-  <div id="detalhes">
-    <button id="fechar">Fechar</button>
-    <h2>Detalhes da ocorrência 🚨</h2>
-    <div id="alerta-detalhes">⚠️ Incêndio de grandes dimensões! Não se aproximar!</div>
-    <div id="alerta-forte-detalhes">🚨 PERIGO EXTREMO! Mais de 1000 operacionais! AFASTE-SE 🚒🔥</div>
-    <table>
-      <tbody id="detalhes-body"></tbody>
-    </table>
-  </div>
+  <footer>
+    Feito com todo meu amor para você, Leandra 🌷
+  </footer>
+</div>
 
-  <script>
-    let fogos = [];
+<script>
+  const btnNao = document.getElementById('btnNao');
+  const btnSim = document.getElementById('btnSim');
+  const inicio = document.getElementById('inicio');
+  const conteudo = document.getElementById('conteudo');
 
-    async function loadFogos() {
-      try {
-        const res = await fetch('https://api.fogos.pt/v2/incidents/active?geojson=true');
-        const data = await res.json();
+  // Se clicar em "Não quero" → mostra surpresa
+  btnNao.addEventListener('click', () => {
+    inicio.style.opacity = '0';
+    setTimeout(()=>{
+      inicio.style.display = 'none';
+      conteudo.style.opacity = '1';
+      conteudo.style.pointerEvents = 'auto';
 
-        fogos = data.features
-          .map(f => f.properties)
-          .filter(p => p.status !== "Conclusão" && p.status !== "Vigilância");
-
-        renderFogos();
-        preencherDistritos();
-
-        document.getElementById("contador").textContent = `Ativos: ${fogos.length}`;
-        const agora = new Date();
-        document.getElementById("ultimaAtualizacao").textContent =
-          "Última atualização: " + agora.toLocaleTimeString();
-
-      } catch (err) {
-        console.error("Erro ao buscar dados:", err);
+      // corações flutuantes
+      for (let i = 0; i < 35; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = 4 + Math.random() * 4 + 's';
+        heart.style.opacity = Math.random();
+        document.body.appendChild(heart);
       }
-    }
+    }, 800);
+  });
 
-    function preencherDistritos() {
-      const filtro = document.getElementById("filtroDistrito");
-      const distritos = [...new Set(fogos.map(f => f.district))].sort();
-      filtro.innerHTML = '<option value="todos">Todos</option>';
-      distritos.forEach(d => {
-        const opt = document.createElement("option");
-        opt.value = d;
-        opt.textContent = d;
-        filtro.appendChild(opt);
-      });
-    }
+  // Botão "Sim" foge
+  btnSim.addEventListener('mouseenter', () => {
+    const maxX = window.innerWidth - btnSim.offsetWidth - 30;
+    const maxY = window.innerHeight - btnSim.offsetHeight - 30;
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+    btnSim.style.position = 'absolute';
+    btnSim.style.left = x + 'px';
+    btnSim.style.top = y + 'px';
+  });
+</script>
 
-    function renderFogos() {
-      const lista = document.getElementById("listaFogos");
-      lista.innerHTML = "";
-
-      let filtrados = [...fogos];
-      const distrito = document.getElementById("filtroDistrito").value;
-      if (distrito !== "todos") {
-        filtrados = filtrados.filter(f => f.district === distrito);
-      }
-
-      const ordenar = document.getElementById("ordenar").value;
-      filtrados.sort((a, b) => {
-        if (ordenar === "man") return b.man - a.man;
-        if (ordenar === "district") return a.district.localeCompare(b.district);
-        if (ordenar === "date") return (b.dateTime?.sec || 0) - (a.dateTime?.sec || 0);
-        return 0;
-      });
-
-      filtrados.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "fogo";
-
-        if (p.man > 1000) {
-          div.classList.add("extremo");
-        } else if (p.man > 100) {
-          div.classList.add("critico");
-        }
-
-        div.innerHTML = `
-          <h3>${p.location}</h3>
-          <p>📍 <strong>Status:</strong> ${p.status}</p>
-          <p>🧑‍🚒 <strong>Operacionais:</strong> ${p.man}</p>
-          <p>🚒 <strong>Veículos:</strong> ${p.terrain}</p>
-          <p>🚁 <strong>Aéreos:</strong> ${p.aerial}</p>
-          ${p.man > 1000 
-            ? '<div class="alerta-forte">🚨 PERIGO EXTREMO! Não se aproximar 🚨</div>' 
-            : p.man > 100 
-              ? '<div class="alerta">⚠️ Alerta: Não se aproximar</div>' 
-              : ''}
-        `;
-
-        div.addEventListener("click", () => {
-          document.getElementById("detalhes").style.display = "flex";
-          const tbody = document.getElementById("detalhes-body");
-          tbody.innerHTML = `
-            <tr><th>ID</th><td>${p.id}</td></tr>
-            <tr><th>Status</th><td>${p.status}</td></tr>
-            <tr><th>Data</th><td>${p.date} ${p.hour}</td></tr>
-            <tr><th>Local</th><td>${p.location}</td></tr>
-            <tr><th>Natureza</th><td>${p.natureza}</td></tr>
-            <tr><th>Distrito</th><td>${p.district}</td></tr>
-            <tr><th>Concelho</th><td>${p.concelho}</td></tr>
-            <tr><th>Freguesia</th><td>${p.freguesia}</td></tr>
-            <tr><th>Operacionais</th><td>${p.man}</td></tr>
-            <tr><th>Veículos</th><td>${p.terrain}</td></tr>
-            <tr><th>Aéreos</th><td>${p.aerial}</td></tr>
-          `;
-
-          document.getElementById("alerta-detalhes").style.display = (p.man > 100 && p.man <= 1000) ? "block" : "none";
-          document.getElementById("alerta-forte-detalhes").style.display = (p.man > 1000) ? "block" : "none";
-        });
-
-        lista.appendChild(div);
-      });
-    }
-
-    document.getElementById("fechar").addEventListener("click", () => {
-      document.getElementById("detalhes").style.display = "none";
-    });
-
-    document.getElementById("filtroDistrito").addEventListener("change", renderFogos);
-    document.getElementById("ordenar").addEventListener("change", renderFogos);
-
-    loadFogos();
-    setInterval(loadFogos, 60 * 1000);
-  </script>
 </body>
 </html>
