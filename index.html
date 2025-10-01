@@ -1,89 +1,107 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A Pessoa Mais Linda do Mundo 💖</title>
-<style>
-    body {
-        background: linear-gradient(to bottom, #ff9a9e, #fad0c4);
-        text-align: center;
-        font-family: Arial, sans-serif;
-        padding: 20px;
-        color: #fff;
-    }
-    h1 {
-        font-size: 2.5em;
-        margin-top: 20px;
-        text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-    }
-    #imagem, #video, #foto {
-        border: 5px solid #fff;
-        border-radius: 20px;
-        margin: 20px auto;
-        max-width: 90%;
-        transition: opacity 1s ease-in-out;
-    }
-    #resultado {
-        font-size: 1.8em;
-        margin-top: 20px;
-        font-weight: bold;
-        opacity: 0;
-        transition: opacity 1s ease-in-out;
-        animation: brilho 2s infinite alternate;
-    }
-    @keyframes brilho {
-        from { text-shadow: 0 0 10px #fff; }
-        to { text-shadow: 0 0 25px #ff3b2e; }
-    }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Free Fire SERVICOS</title>
+  <style>
+    :root{--bg:#000;--accent:#00ff66;--muted:#8fffd9}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:#03060a;color:var(--muted);font-family:ui-monospace,monospace;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{width:520px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:18px;border-radius:10px;border:1px solid rgba(0,255,102,0.06)}
+    h1{margin:0 0 8px 0;color:var(--accent);font-size:18px}
+    label{display:block;font-size:12px;color:#9fffd1;margin-top:10px}
+    input,select{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,255,102,0.06);background:transparent;color:var(--muted);font-family:inherit}
+    .row{display:flex;gap:8px;margin-top:12px}
+    button{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(0,255,102,0.12);background:transparent;color:var(--accent);cursor:pointer}
+    pre{background:#001214;padding:10px;border-radius:8px;margin-top:12px;max-height:220px;overflow:auto;border:1px dashed rgba(0,255,102,0.04);color:#bfffe6}
+    .small{font-size:12px;color:#86ffd0;margin-top:8px}
+  </style>
 </head>
 <body>
+  <div class="card">
+    <h1>FREE FIRE</h1>
 
-<h1>👑 Descubra a Pessoa Mais Linda do Mundo! 👑</h1>
+    <label for="uid">UID</label>
+    <input id="uid" placeholder="ex: 9211319283" value="9211319283">
 
-<!-- Foto inicial (uma pessoa aleatória) -->
-<img id="imagem" src="https://randomuser.me/api/portraits/women/44.jpg" width="300" height="230" alt="Outra pessoa">
-<video id="video" width="300" height="230" autoplay style="display:none;"></video>
-<canvas id="canvas" width="300" height="230" style="display:none;"></canvas>
-<img id="foto" width="300" height="230" style="display:none;" alt="Sua Foto">
-<div id="resultado">💖 VOCÊ é a PESSOA MAIS LINDA DO MUNDO!!! 💖</div>
+    <label for="server">Server</label>
+    <select id="server">
+      <option value="BR">BR</option>
+      <option value="NA">MANUTENÇÃO</option>
+      <option value="EU">MANUTENÇÃO</option>
+      <option value="AS">MANUTENÇÃO</option>
+    </select>
 
-<script>
-    const imagem = document.getElementById('imagem');
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const foto = document.getElementById('foto');
-    const resultado = document.getElementById('resultado');
+    <div class="row">
+      <button id="btnSend">Enviar Pedidos</button>
+      <button id="btnLike">Enviar like</button>
+    </div>
 
-    // Primeiro mostra a foto aleatória por 3 segundos
-    setTimeout(() => {
-        // Pede acesso à câmera
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
-                video.style.display = "block";
-                imagem.style.display = "none";
+    <div class="small">Resposta </code></div>
+    <pre id="output">— sem resposta —</pre>
+  </div>
 
-                // Depois de 3 segundos, tira a foto e mostra
-                setTimeout(() => {
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    foto.src = canvas.toDataURL('image/png');
-                    foto.style.display = "block";
-                    video.style.display = "none";
-                    resultado.style.opacity = 1;
+  <script>
+    const uidEl = document.getElementById('uid');
+    const serverEl = document.getElementById('server');
+    const out = document.getElementById('output');
+    const base = 'https://free-fire-bot-ten.vercel.app';
 
-                    // Para a câmera depois da foto
-                    stream.getTracks().forEach(track => track.stop());
-                }, 3000);
-            })
-            .catch(err => {
-                alert("❌ Não foi possível acessar a câmera.");
-                console.error(err);
-            });
-    }, 3000);
-</script>
+    function buildUrl(path){
+      const uid = encodeURIComponent((uidEl.value||'').trim());
+      const server = encodeURIComponent((serverEl.value||'BR').trim());
+      return `${base}/${path}?uid=${uid}&server=${server}`;
+    }
 
+    function sanitize(obj){
+      try{
+        if (obj && typeof obj === 'object'){
+          const copy = JSON.parse(JSON.stringify(obj));
+          if (copy.credits) delete copy.credits;
+          if (copy.creditos) delete copy.creditos;
+          return copy;
+        }
+      }catch(e){}
+      return obj;
+    }
+
+    async function tryFetchOrOpen(url){
+      out.textContent = 'Enviando (fetch GET)...';
+      try{
+        const res = await fetch(url, { method: 'GET', cache: 'no-store' });
+        const contentType = res.headers.get('content-type') || '';
+        let data;
+        if (contentType.includes('application/json')){
+          data = await res.json();
+          data = sanitize(data);
+          out.textContent = JSON.stringify(data, null, 2);
+        } else {
+          const text = await res.text();
+          try {
+            const parsed = JSON.parse(text);
+            out.textContent = JSON.stringify(sanitize(parsed), null, 2);
+          } catch(e){
+            out.textContent = text.slice(0, 2000) || '[resposta vazia]';
+          }
+        }
+        out.textContent = 'Status: ' + res.status + ' ' + res.statusText + '\n\n' + out.textContent;
+      }catch(err){
+        // provável CORS ou rede — fallback: abrir em nova aba
+        out.textContent = 'Erro no fetch (provável CORS ou rede). Abrindo em nova aba como fallback.\n\n' + String(err);
+        window.open(url, '_blank');
+      }
+    }
+
+    document.getElementById('btnSend').addEventListener('click', ()=>{
+      const url = buildUrl('send_requests');
+      tryFetchOrOpen(url);
+    });
+
+    document.getElementById('btnLike').addEventListener('click', ()=>{
+      const url = buildUrl('like');
+      tryFetchOrOpen(url);
+    });
+  </script>
 </body>
-</html>
+    </html>
