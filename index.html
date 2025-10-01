@@ -1,82 +1,107 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Hacker — Free Fire APIs</title>
-<style>
-  body {background:#000;color:#0f0;font-family:monospace;padding:20px;display:flex;justify-content:center}
-  .card{width:500px;background:#011214;padding:20px;border-radius:10px;border:1px solid #0f0}
-  h1{color:#0f0;font-size:18px;margin-top:0}
-  label{display:block;margin-top:10px;font-size:12px}
-  input, select{width:100%;padding:8px;border-radius:6px;background:#001214;color:#0f0;border:1px solid #0f0;font-family:inherit}
-  .row{display:flex;justify-content:space-between;gap:4%;margin-top:10px}
-  button{flex:1;padding:10px;border-radius:6px;border:1px solid #0f0;background:transparent;color:#0f0;cursor:pointer;font-family:inherit}
-  pre{background:#001214;padding:10px;border-radius:6px;margin-top:12px;max-height:200px;overflow:auto;border:1px dashed #0f0;color:#bfffe6}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Free Fire SERVICOS</title>
+  <style>
+    :root{--bg:#000;--accent:#00ff66;--muted:#8fffd9}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:#03060a;color:var(--muted);font-family:ui-monospace,monospace;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{width:520px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:18px;border-radius:10px;border:1px solid rgba(0,255,102,0.06)}
+    h1{margin:0 0 8px 0;color:var(--accent);font-size:18px}
+    label{display:block;font-size:12px;color:#9fffd1;margin-top:10px}
+    input,select{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,255,102,0.06);background:transparent;color:var(--muted);font-family:inherit}
+    .row{display:flex;gap:8px;margin-top:12px}
+    button{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(0,255,102,0.12);background:transparent;color:var(--accent);cursor:pointer}
+    pre{background:#001214;padding:10px;border-radius:8px;margin-top:12px;max-height:220px;overflow:auto;border:1px dashed rgba(0,255,102,0.04);color:#bfffe6}
+    .small{font-size:12px;color:#86ffd0;margin-top:8px}
+  </style>
 </head>
 <body>
-<div class="card">
-  <h1>Hacker</h1>
+  <div class="card">
+    <h1>FREE FIRE</h1>
 
-  <label for="uid">UID</label>
-  <input id="uid" placeholder="ex: 9211319283" value="9211319283">
+    <label for="uid">UID</label>
+    <input id="uid" placeholder="ex: 9211319283" value="9211319283">
 
-  <label for="server">Server</label>
-  <select id="server">
-    <option value="BR">BR</option>
-    <option value="NA">NA</option>
-    <option value="EU">EU</option>
-    <option value="AS">AS</option>
-  </select>
+    <label for="server">Server</label>
+    <select id="server">
+      <option value="BR">BR</option>
+      <option value="NA">MANUTENÇÃO</option>
+      <option value="EU">MANUTENÇÃO</option>
+      <option value="AS">MANUTENÇÃO</option>
+    </select>
 
-  <div class="row">
-    <button id="btnSend">send_requests</button>
-    <button id="btnLike">like</button>
+    <div class="row">
+      <button id="btnSend">Enviar Pedidos</button>
+      <button id="btnLike">Enviar like</button>
+    </div>
+
+    <div class="small">Resposta </code></div>
+    <pre id="output">— sem resposta —</pre>
   </div>
 
-  <label>Resposta</label>
-  <pre id="output">— sem resposta —</pre>
-</div>
+  <script>
+    const uidEl = document.getElementById('uid');
+    const serverEl = document.getElementById('server');
+    const out = document.getElementById('output');
+    const base = 'https://free-fire-bot-ten.vercel.app';
 
-<!-- Axios CDN -->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    function buildUrl(path){
+      const uid = encodeURIComponent((uidEl.value||'').trim());
+      const server = encodeURIComponent((serverEl.value||'BR').trim());
+      return `${base}/${path}?uid=${uid}&server=${server}`;
+    }
 
-<script>
-const base = 'https://free-fire-bot-ten.vercel.app';
-const uidEl = document.getElementById('uid');
-const serverEl = document.getElementById('server');
-const output = document.getElementById('output');
+    function sanitize(obj){
+      try{
+        if (obj && typeof obj === 'object'){
+          const copy = JSON.parse(JSON.stringify(obj));
+          if (copy.credits) delete copy.credits;
+          if (copy.creditos) delete copy.creditos;
+          return copy;
+        }
+      }catch(e){}
+      return obj;
+    }
 
-function buildUrl(endpoint){
-  const uid = encodeURIComponent(uidEl.value.trim());
-  const server = encodeURIComponent(serverEl.value.trim());
-  return `${base}/${endpoint}?uid=${uid}&server=${server}`;
-}
+    async function tryFetchOrOpen(url){
+      out.textContent = 'Enviando (fetch GET)...';
+      try{
+        const res = await fetch(url, { method: 'GET', cache: 'no-store' });
+        const contentType = res.headers.get('content-type') || '';
+        let data;
+        if (contentType.includes('application/json')){
+          data = await res.json();
+          data = sanitize(data);
+          out.textContent = JSON.stringify(data, null, 2);
+        } else {
+          const text = await res.text();
+          try {
+            const parsed = JSON.parse(text);
+            out.textContent = JSON.stringify(sanitize(parsed), null, 2);
+          } catch(e){
+            out.textContent = text.slice(0, 2000) || '[resposta vazia]';
+          }
+        }
+        out.textContent = 'Status: ' + res.status + ' ' + res.statusText + '\n\n' + out.textContent;
+      }catch(err){
+        // provável CORS ou rede — fallback: abrir em nova aba
+        out.textContent = 'Erro no fetch (provável CORS ou rede). Abrindo em nova aba como fallback.\n\n' + String(err);
+        window.open(url, '_blank');
+      }
+    }
 
-// Limpa créditos do JSON
-function sanitize(obj){
-  if (!obj || typeof obj !== 'object') return obj;
-  const copy = JSON.parse(JSON.stringify(obj));
-  if (copy.credits) delete copy.credits;
-  if (copy.creditos) delete copy.creditos;
-  return copy;
-}
+    document.getElementById('btnSend').addEventListener('click', ()=>{
+      const url = buildUrl('send_requests');
+      tryFetchOrOpen(url);
+    });
 
-async function sendRequest(endpoint){
-  const url = buildUrl(endpoint);
-  output.textContent = `Enviando para ${endpoint}...`;
-  try {
-    const response = await axios.get(url);
-    const data = sanitize(response.data);
-    output.textContent = JSON.stringify(data, null, 2);
-  } catch(err){
-    output.textContent = 'Erro: ' + (err.response ? JSON.stringify(err.response.data, null,2) : err.message);
-  }
-}
-
-document.getElementById('btnSend').addEventListener('click', ()=>sendRequest('send_requests'));
-document.getElementById('btnLike').addEventListener('click', ()=>sendRequest('like'));
-</script>
+    document.getElementById('btnLike').addEventListener('click', ()=>{
+      const url = buildUrl('like');
+      tryFetchOrOpen(url);
+    });
+  </script>
 </body>
 </html>
