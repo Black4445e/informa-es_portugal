@@ -3,117 +3,180 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Free Fire SERVICOS</title>
+  <title>FF Likes Site</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#000;--accent:#00ff66;--muted:#8fffd9}
-    *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;background:#03060a;color:var(--muted);font-family:ui-monospace,monospace;display:flex;align-items:center;justify-content:center;padding:20px;flex-direction:column;gap:20px}
-    .banner{
-      background:rgba(0,255,102,0.1);
-      border:1px solid rgba(0,255,102,0.2);
-      padding:10px 16px;
-      border-radius:10px;
-      color:var(--accent);
-      font-size:14px;
-      text-align:center;
-      width:520px;
-      box-shadow:0 0 8px rgba(0,255,102,0.2);
+    :root {
+      --accent: #ffb400;
+      --text: #fff;
+      --btn: linear-gradient(180deg,#ffa600,#ff5f00);
+      --btn-hover: linear-gradient(180deg,#ffc340,#ff7b2a);
+      --success: #4CAF50;
+      --error: #f44336;
+      --loading: #ffeb3b;
     }
-    .card{width:520px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:18px;border-radius:10px;border:1px solid rgba(0,255,102,0.06)}
-    h1{margin:0 0 8px 0;color:var(--accent);font-size:18px}
-    label{display:block;font-size:12px;color:#9fffd1;margin-top:10px}
-    input,select{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,255,102,0.06);background:transparent;color:var(--muted);font-family:inherit}
-    .row{display:flex;gap:8px;margin-top:12px}
-    button{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(0,255,102,0.12);background:transparent;color:var(--accent);cursor:pointer}
-    pre{background:#001214;padding:10px;border-radius:8px;margin-top:12px;max-height:220px;overflow:auto;border:1px dashed rgba(0,255,102,0.04);color:#bfffe6}
-    .small{font-size:12px;color:#86ffd0;margin-top:8px}
+
+    * { box-sizing: border-box; font-family: "Poppins", sans-serif; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 15px;
+      color: var(--text);
+      text-align: center;
+      position: relative;
+      background: linear-gradient(-45deg, #ff0047, #2c34ff, #00ffe7, #ff00ff);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      pointer-events: none; /* deixa os elementos clicáveis */
+      z-index: -1; /* garante que fique atrás de tudo */
+    }
+
+    .title { 
+      font-size: 30px; font-weight: 700; color: #fff; letter-spacing: 1px;
+      text-shadow: 0 0 15px #ffcc33, 0 0 30px #ff33ff; margin-bottom: 8px; z-index: 1; 
+    }
+    .subtitle { font-size: 16px; color: #ddd; margin-bottom: 30px; z-index: 1; }
+
+    .regions {
+      display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px;
+      z-index: 1;
+    }
+    .region-btn {
+      background: var(--btn); border: none; border-radius: 10px; color: #fff;
+      padding: 10px 0; width: 80px; font-weight: 600; cursor: pointer;
+      transition: transform 0.2s, background 0.2s; font-size: 14px;
+      box-shadow: 0 0 5px #fff, 0 0 10px #ff0;
+    }
+    .region-btn:hover, .region-btn.active { background: var(--btn-hover); transform: scale(1.05); }
+
+    input {
+      width: 280px;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      text-align: center;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      margin-bottom: 15px;
+      transition: all 0.2s;
+      box-shadow: 0 0 5px #00ffe7, 0 0 10px #ff00ff;
+    }
+
+    input::placeholder {
+      color: rgba(255,255,255,0.9);
+      opacity: 1;
+    }
+
+    input:focus {
+      outline: 2px solid var(--accent);
+      background: rgba(0,0,0,0.7);
+      box-shadow: 0 0 10px #00ffe7, 0 0 20px #ff00ff;
+    }
+
+    .main-btn {
+      background: #a020f0; border: none; border-radius: 8px; padding: 12px 20px;
+      color: #fff; font-weight: 600; cursor: pointer; font-size: 14px; transition: all .3s;
+      box-shadow: 0 0 10px #ff33ff, 0 0 20px #00ffe7;
+    }
+    .main-btn:hover { background: #c250ff; }
+    .main-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    pre {
+      background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px;
+      width: 300px; margin-top: 20px; font-size: 12px; color: #bfffdc;
+      white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgba(255,255,255,0.1);
+      z-index: 1;
+    }
   </style>
 </head>
 <body>
-  <div class="banner">💚 Eu envio likes para quem enviar 5 moedas!</div>
+  <div class="overlay"></div>
 
-  <div class="card">
-    <h1>FREE FIRE</h1>
+  <div class="title">FREE FIRE</div>
+  <div class="subtitle">FF LIKES SITE</div>
 
-    <label for="uid">UID</label>
-    <input id="uid" placeholder="ex: 9211319283" value="9211319283">
-
-    <label for="server">Server</label>
-    <select id="server">
-      <option value="BR">BR</option>
-      <option value="NA">MANUTENÇÃO</option>
-      <option value="EU">MANUTENÇÃO</option>
-      <option value="AS">MANUTENÇÃO</option>
-    </select>
-
-    <div class="row">
-      <button id="btnSend">Enviar Pedidos</button>
-      <button id="btnLike">Enviar like</button>
-    </div>
-
-    <div class="small">Resposta </div>
-    <pre id="output">— sem resposta —</pre>
+  <h3 style="margin-bottom:10px;">Selecione sua Região</h3>
+  <div class="regions" id="regions">
+    <button class="region-btn" data-region="BR">BR</button>
+    <button class="region-btn" data-region="EU">EU</button>
   </div>
 
+  <input id="uid" placeholder="Digite seu UID">
+  <button class="main-btn" id="sendBtn">Enviar Likes</button>
+
+  <pre id="output">— esperando —</pre>
+
   <script>
-    const uidEl = document.getElementById('uid');
-    const serverEl = document.getElementById('server');
-    const out = document.getElementById('output');
+    const output = document.getElementById('output');
+    const sendBtn = document.getElementById('sendBtn');
     const base = 'https://free-fire-bot-ten.vercel.app';
+    let selectedRegion = localStorage.getItem('region') || null;
 
-    function buildUrl(path){
-      const uid = encodeURIComponent((uidEl.value||'').trim());
-      const server = encodeURIComponent((serverEl.value||'BR').trim());
-      return `${base}/${path}?uid=${uid}&server=${server}`;
-    }
+    const regionButtons = document.querySelectorAll('.region-btn');
+    regionButtons.forEach(btn => {
+      if(btn.dataset.region === selectedRegion) btn.classList.add('active');
+      btn.addEventListener('click', () => {
+        regionButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedRegion = btn.dataset.region;
+        localStorage.setItem('region', selectedRegion);
+      });
+    });
 
-    function sanitize(obj){
-      try{
-        if (obj && typeof obj === 'object'){
-          const copy = JSON.parse(JSON.stringify(obj));
-          if (copy.credits) delete copy.credits;
-          if (copy.creditos) delete copy.creditos;
-          return copy;
-        }
-      }catch(e){}
-      return obj;
-    }
+    async function sendLikes() {
+      const uid = document.getElementById('uid').value.trim();
+      if (!uid || !selectedRegion) {
+        output.textContent = '⚠️ Selecione uma região e digite o UID!';
+        output.style.color = 'var(--error)';
+        return;
+      }
+      if(!/^\d+$/.test(uid)) {
+        output.textContent = '⚠️ UID inválido!';
+        output.style.color = 'var(--error)';
+        return;
+      }
 
-    async function tryFetchOrOpen(url){
-      out.textContent = 'Enviando (fetch GET)...';
-      try{
-        const res = await fetch(url, { method: 'GET', cache: 'no-store' });
-        const contentType = res.headers.get('content-type') || '';
-        let data;
-        if (contentType.includes('application/json')){
-          data = await res.json();
-          data = sanitize(data);
-          out.textContent = JSON.stringify(data, null, 2);
+      sendBtn.disabled = true;
+      output.textContent = '🔄 Enviando...';
+      output.style.color = 'var(--loading)';
+
+      const url = `${base}/like?uid=${encodeURIComponent(uid)}&server=${encodeURIComponent(selectedRegion)}`;
+
+      try {
+        const res = await fetch(url);
+        const text = await res.text();
+        if(res.ok) {
+          output.textContent = `✅ Enviado com sucesso!\n\n${text.slice(0,1000)}`;
+          output.style.color = 'var(--success)';
         } else {
-          const text = await res.text();
-          try {
-            const parsed = JSON.parse(text);
-            out.textContent = JSON.stringify(sanitize(parsed), null, 2);
-          } catch(e){
-            out.textContent = text.slice(0, 2000) || '[resposta vazia]';
-          }
+          output.textContent = `❌ Erro ${res.status} ${res.statusText}\n\n${text.slice(0,1000)}`;
+          output.style.color = 'var(--error)';
         }
-        out.textContent = 'Status: ' + res.status + ' ' + res.statusText + '\n\n' + out.textContent;
-      }catch(err){
-        out.textContent = 'Erro no fetch (provável CORS ou rede). Abrindo em nova aba como fallback.\n\n' + String(err);
-        window.open(url, '_blank');
+      } catch (err) {
+        output.textContent = `❌ Erro: ${err.message}`;
+        output.style.color = 'var(--error)';
+      } finally {
+        sendBtn.disabled = false;
       }
     }
 
-    document.getElementById('btnSend').addEventListener('click', ()=>{
-      const url = buildUrl('send_requests');
-      tryFetchOrOpen(url);
-    });
-
-    document.getElementById('btnLike').addEventListener('click', ()=>{
-      const url = buildUrl('like');
-      tryFetchOrOpen(url);
-    });
+    sendBtn.addEventListener('click', sendLikes);
   </script>
 </body>
 </html>
